@@ -1,0 +1,30 @@
+name: Build A.K Journal APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download project
+        uses: actions/checkout@v4
+
+      - name: Extract project
+        run: |
+          unzip -q AK_Journal_v1.zip
+          cd AK_Journal
+          gradle wrapper --gradle-version 8.9
+
+      - name: Build APK
+        run: |
+          cd AK_Journal
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AK-Journal-APK
+          path: AK_Journal/app/build/outputs/apk/debug/app-debug.apk
